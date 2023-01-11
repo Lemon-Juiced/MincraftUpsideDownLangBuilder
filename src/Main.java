@@ -75,16 +75,20 @@ public class Main {
                     alteredLangName = alteredLangName.replace('w', 'ʍ');
                     alteredLangName = alteredLangName.replace('y', 'ʎ');
 
-                    alteredLangName = alteredLangName.replace('A', '∀');
+                    alteredLangName = alteredLangName.replace('A', 'Ɐ');
+                    alteredLangName = alteredLangName.replace('B', 'ᗺ');
                     alteredLangName = alteredLangName.replace('C', 'Ɔ');
+                    alteredLangName = alteredLangName.replace('D', 'ᗡ');
                     alteredLangName = alteredLangName.replace('E', 'Ǝ');
                     alteredLangName = alteredLangName.replace('F', 'Ⅎ');
-                    alteredLangName = alteredLangName.replace('G', 'פ');
-                    alteredLangName = alteredLangName.replace('J', 'ſ');
-                    alteredLangName = alteredLangName.replace('L', '˥');
+                    alteredLangName = alteredLangName.replace('G', '⅁');
+                    alteredLangName = alteredLangName.replace('J', 'Ր');
+                    alteredLangName = alteredLangName.replace('L', 'Ꞁ');
                     alteredLangName = alteredLangName.replace('M', 'η'); // -> W
                     alteredLangName = alteredLangName.replace('P', 'Ԁ');
-                    alteredLangName = alteredLangName.replace('T', '┴');
+                    alteredLangName = alteredLangName.replace('Q', 'Ꝺ');
+                    alteredLangName = alteredLangName.replace('R', 'ᴚ');
+                    alteredLangName = alteredLangName.replace('T', '⟘');
                     alteredLangName = alteredLangName.replace('U', '∩');
                     alteredLangName = alteredLangName.replace('V', 'Λ');
                     alteredLangName = alteredLangName.replace('W', 'θ'); // -> M
@@ -120,6 +124,10 @@ public class Main {
                     alteredLangName = alteredLangName.replace("μ", ",,"); // " -> ,,
                     alteredLangName = alteredLangName.replace('ξ', ','); // ' -> , or ` -> ,
                 }
+
+                //Reverse the text
+                StringBuilder stringBuilder = new StringBuilder(alteredLangName);
+                stringBuilder.reverse();
 
                 // Create the correct output
                 try {
