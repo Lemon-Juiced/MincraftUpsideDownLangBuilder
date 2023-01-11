@@ -1,104 +1,139 @@
 import java.io.*;
-import java.io.IOException;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(new File("en_us.json"));
+        //Read the lines into an array named lang (this gets everything, no buffer overflow)
+        ArrayList<String> lang = new ArrayList<>();
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter("en_ud.json"));
-        writer.write("{\n"); //Begin the file
-
-        // Loop through the original lang file
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if(line == null || line.equals("") ){/*Skip*/} //If line is null or line is blank
-            else if(line.startsWith("{") || line.startsWith("}")){/*Skip*/} // If begins or ends file
-            else {
-                //Split the line to code name and lang name
-                String part0 = line.substring(0, line.indexOf(':')); //Not needed until print out
-                String part1 = line.substring(line.indexOf(':'));
-
-                String part1aug = ": \"";
-                for (int i = 0; i < part1.length(); i++) {
-                    part1aug = ": \"";
-                    char c = part1.charAt(i);
-                    switch (c) {
-                        case ':', ' ' -> { } // Skip ':' and ' '
-                        case 'a' -> part1aug = part1aug +"ɐ";
-                        case 'b' -> part1aug = part1aug +"q";
-                        case 'c' -> part1aug = part1aug + "ɔ";
-                        case 'd' -> part1aug = part1aug + "p";
-                        case 'e' -> part1aug = part1aug + "ǝ";
-                        case 'f' -> part1aug = part1aug + "ɟ";
-                        case 'g' -> part1aug = part1aug + "ƃ";
-                        case 'h' -> part1aug = part1aug + "ɥ";
-                        case 'i' -> part1aug = part1aug + "ᴉ";
-                        case 'j' -> part1aug = part1aug + "ɾ";
-                        case 'k' -> part1aug = part1aug + "ʞ";
-                        case 'l' -> part1aug = part1aug + "l";
-                        case 'm' -> part1aug = part1aug + "ɯ";
-                        case 'n' -> part1aug = part1aug + "u";
-                        case 'o' -> part1aug = part1aug + "o";
-                        case 'p' -> part1aug = part1aug + "d";
-                        case 'q' -> part1aug = part1aug + "b";
-                        case 'r' -> part1aug = part1aug + "ɹ";
-                        case 's' -> part1aug = part1aug + "s";
-                        case 't' -> part1aug = part1aug + "ʇ";
-                        case 'u' -> part1aug = part1aug + "n";
-                        case 'v' -> part1aug = part1aug + "ʌ";
-                        case 'w' -> part1aug = part1aug + "ʍ";
-                        case 'x' -> part1aug = part1aug + "x";
-                        case 'y' -> part1aug = part1aug + "ʎ";
-                        case 'z' -> part1aug = part1aug + "z";
-                        case 'A' -> part1aug = part1aug + "∀";
-                        case 'B' -> part1aug = part1aug + "B";
-                        case 'C' -> part1aug = part1aug + "Ɔ";
-                        case 'D' -> part1aug = part1aug + "D";
-                        case 'E' -> part1aug = part1aug + "Ǝ";
-                        case 'F' -> part1aug = part1aug + "Ⅎ";
-                        case 'G' -> part1aug = part1aug + "פ";
-                        case 'H' -> part1aug = part1aug + "H";
-                        case 'I' -> part1aug = part1aug + "I";
-                        case 'J' -> part1aug = part1aug + "ſ";
-                        case 'K' -> part1aug = part1aug + "K";
-                        case 'L' -> part1aug = part1aug + "˥";
-                        case 'M' -> part1aug = part1aug + "W";
-                        case 'N' -> part1aug = part1aug + "N";
-                        case 'O' -> part1aug = part1aug + "O";
-                        case 'P' -> part1aug = part1aug + "Ԁ";
-                        case 'Q' -> part1aug = part1aug + "Q";
-                        case 'R' -> part1aug = part1aug + "R";
-                        case 'S' -> part1aug = part1aug + "S";
-                        case 'T' -> part1aug = part1aug + "┴";
-                        case 'U' -> part1aug = part1aug + "∩";
-                        case 'V' -> part1aug = part1aug + "Λ";
-                        case 'W' -> part1aug = part1aug + "M";
-                        case 'X' -> part1aug = part1aug + "X";
-                        case 'Y' -> part1aug = part1aug + "⅄";
-                        case 'Z' -> part1aug = part1aug + "Z";
-                        case '0' -> part1aug = part1aug + "0";
-                        case '1' -> part1aug = part1aug + "Ɩ";
-                        case '2' -> part1aug = part1aug + "ᄅ";
-                        case '3' -> part1aug = part1aug + "Ɛ";
-                        case '4' -> part1aug = part1aug + "ㄣ";
-                        case '5' -> part1aug = part1aug + "ϛ";
-                        case '6' -> part1aug = part1aug + "9";
-                        case '7' -> part1aug = part1aug + "ㄥ";
-                        case '8' -> part1aug = part1aug + "8";
-                        case '9' -> part1aug = part1aug + "6";
-                        case ',' -> part1aug = part1aug + "'";
-                        case '.' -> part1aug = part1aug + "˙";
-                        case '?' -> part1aug = part1aug + "¿";
-                        case '!' -> part1aug = part1aug + "¡";
-                        case '"' -> part1aug = part1aug + ",,";
-                        case '\'' -> part1aug = part1aug + ",";
-                        case '`' -> part1aug = part1aug + ",";
-                    }
+        try (FileReader f = new FileReader("en_us.json")) {
+            StringBuffer sb = new StringBuffer();
+            while (f.ready()) {
+                char c = (char) f.read();
+                if (c == '\n') {
+                    lang.add(sb.toString());
+                    sb = new StringBuffer();
+                } else {
+                    sb.append(c);
                 }
-                writer.write(part0 + part1aug + "\",\n");
+            }
+            if (sb.length() > 0) {
+                lang.add(sb.toString());
             }
         }
-        writer.write("}");
+
+        // Clear the output file before use
+        PrintWriter writer = new PrintWriter("en_ud.json");
+        writer.print("");
+        writer.close();
+
+        // Get output initialized
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("en_ud.json", true));
+        bufferedWriter.write("{\n");
+
+        // Alter the lang files
+        int endPoint = lang.size() - 1;
+        for (int i = 1; i < endPoint; i++) { // Skip the '{' and '}'
+            String line = lang.get(i); // The current line being worked on
+            //System.out.println(line); //Testing purposes
+
+            //Only run this if the line contains a colon (thus not on blank lines
+            if (line.contains(":")) {
+                String codeName = line.substring(0, line.indexOf(':'));
+                String langName = line.substring(line.indexOf(':') + 1);
+                //System.out.println(codeName + ": " + langName); //Testing purposes
+
+                //Get the lang name without the parenthesis, comma, and line break (these can't end up changed)
+                String alteredLangName = langName.substring(langName.indexOf("\"") + 1, langName.lastIndexOf("\""));
+
+                if (codeName.contains(".color")) {
+                    // This is the final point and this item cannot be altered without breaking the lang
+                } else {
+                    // Change this sequence first
+                    alteredLangName = alteredLangName.replace("\\\"", ",,");
+
+                    //Set to distinct character first, if they need to be changed
+                    alteredLangName = alteredLangName.replace('a', 'ɐ');
+                    alteredLangName = alteredLangName.replace('b', 'α'); // -> q
+                    alteredLangName = alteredLangName.replace('c', 'ɔ');
+                    alteredLangName = alteredLangName.replace('d', 'β'); // -> p
+                    alteredLangName = alteredLangName.replace('e', 'ǝ');
+                    alteredLangName = alteredLangName.replace('f', 'ɟ');
+                    alteredLangName = alteredLangName.replace('g', 'ƃ');
+                    alteredLangName = alteredLangName.replace('h', 'ɥ');
+                    alteredLangName = alteredLangName.replace('i', 'ᴉ');
+                    alteredLangName = alteredLangName.replace('j', 'ɾ');
+                    alteredLangName = alteredLangName.replace('k', 'ʞ');
+                    alteredLangName = alteredLangName.replace('m', 'ɯ');
+                    alteredLangName = alteredLangName.replace('n', 'γ'); // -> u
+                    alteredLangName = alteredLangName.replace('p', 'δ'); // -> d
+                    alteredLangName = alteredLangName.replace('q', 'ε'); // -> b
+                    alteredLangName = alteredLangName.replace('r', 'ɹ');
+                    alteredLangName = alteredLangName.replace('t', 'ʇ');
+                    alteredLangName = alteredLangName.replace('u', 'ζ'); // -> n
+                    alteredLangName = alteredLangName.replace('v', 'ʌ');
+                    alteredLangName = alteredLangName.replace('w', 'ʍ');
+                    alteredLangName = alteredLangName.replace('y', 'ʎ');
+
+                    alteredLangName = alteredLangName.replace('A', '∀');
+                    alteredLangName = alteredLangName.replace('C', 'Ɔ');
+                    alteredLangName = alteredLangName.replace('E', 'Ǝ');
+                    alteredLangName = alteredLangName.replace('F', 'Ⅎ');
+                    alteredLangName = alteredLangName.replace('G', 'פ');
+                    alteredLangName = alteredLangName.replace('J', 'ſ');
+                    alteredLangName = alteredLangName.replace('L', '˥');
+                    alteredLangName = alteredLangName.replace('M', 'η'); // -> W
+                    alteredLangName = alteredLangName.replace('P', 'Ԁ');
+                    alteredLangName = alteredLangName.replace('T', '┴');
+                    alteredLangName = alteredLangName.replace('U', '∩');
+                    alteredLangName = alteredLangName.replace('V', 'Λ');
+                    alteredLangName = alteredLangName.replace('W', 'θ'); // -> M
+                    alteredLangName = alteredLangName.replace('Y', '⅄');
+
+                    alteredLangName = alteredLangName.replace('1', 'Ɩ');
+                    alteredLangName = alteredLangName.replace('2', 'ᄅ');
+                    alteredLangName = alteredLangName.replace('3', 'Ɛ');
+                    alteredLangName = alteredLangName.replace('4', 'ㄣ');
+                    alteredLangName = alteredLangName.replace('5', 'ϛ');
+                    alteredLangName = alteredLangName.replace('6', 'ι'); // -> 9
+                    alteredLangName = alteredLangName.replace('7', 'ㄥ');
+                    alteredLangName = alteredLangName.replace('9', 'κ'); // -> 6
+
+                    alteredLangName = alteredLangName.replace(',', 'λ'); // -> '
+                    alteredLangName = alteredLangName.replace('.', '˙');
+                    alteredLangName = alteredLangName.replace('?', '¿');
+                    alteredLangName = alteredLangName.replace('!', '¡');
+                    alteredLangName = alteredLangName.replace('\"', 'μ'); // -> ,,
+                    alteredLangName = alteredLangName.replace('\'', 'ξ'); // -> ,
+                    alteredLangName = alteredLangName.replace('`', 'ξ'); // ->
+
+                    //Set to the character they need to be
+                    alteredLangName = alteredLangName.replace('α', 'q'); // b -> q
+                    alteredLangName = alteredLangName.replace('β', 'p'); // d -> p
+                    alteredLangName = alteredLangName.replace('γ', 'u'); // n -> u
+                    alteredLangName = alteredLangName.replace('δ', 'd'); // p -> d
+                    alteredLangName = alteredLangName.replace('ε', 'b'); // q -> b
+                    alteredLangName = alteredLangName.replace('ζ', 'n'); // u -> n
+                    alteredLangName = alteredLangName.replace('η', 'w'); // M -> W
+                    alteredLangName = alteredLangName.replace('θ', 'm'); // W -> M
+                    alteredLangName = alteredLangName.replace('λ', '\''); // , -> '
+                    alteredLangName = alteredLangName.replace("μ", ",,"); // " -> ,,
+                    alteredLangName = alteredLangName.replace('ξ', ','); // ' -> , or ` -> ,
+                }
+
+                // Create the correct output
+                try {
+                    if (i == endPoint - 1) { //The final line does not get a trailing comma
+                        bufferedWriter.write(codeName + ": \"" + alteredLangName + "\"\n");
+                    } else {
+                        bufferedWriter.write(codeName + ": \"" + alteredLangName + "\",\n");
+                    }
+                } catch (IOException e){}
+            }
+        }
+
+        // Finish the file
+        bufferedWriter.write("}");
+        bufferedWriter.close();
     }
 }
